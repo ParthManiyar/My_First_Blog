@@ -1,12 +1,38 @@
 {% extends 'blog/base.html' %}
 {% block content %}
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+        <form action="{%url 'post_list' %}">
+            <select name="author">
+                <option value="All">All</option>
+            {% for author in authors %}
+                <option value="{{author}}"> {{author}}</option>
+            {% endfor %}
+            </select>
+            <input type="submit" value="submit" id="button">
+        </form>
+        
+        <script>
+            $(document).ready(function(){
+              $("button").click(function(){
+                $.get("/post_list/", function(data, status){
+                  alert("Data: " + data + "\nStatus: " + status);
+                });
+              });
+            });
+            </script>
+
     {% for post in posts %}
         <div class="post">
             <div class="date">
                 {{ post.published_date }}
             </div>
-           <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+           <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }} By {{post.author}}</a></h1>
             <p>{{ post.text|linebreaksbr }}</p>
         </div>
     {% endfor %}
 {% endblock %}
+
